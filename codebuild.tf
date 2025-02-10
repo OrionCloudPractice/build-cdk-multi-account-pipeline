@@ -5,14 +5,10 @@ module "deploy" {
   source                = "./modules/codebuild"
   codebuild_name        = lower("${var.pipeline_name}-deploy")
   codebuild_role        = aws_iam_role.codebuild.arn
-  environment_variables = merge(
-    var.environment_variables,
-    {
-      SAST_REPORT_NAME = aws_codebuild_report_group.sast.name
-    })
   build_timeout         = 5
-  build_spec            = "validate.yml"
+  build_spec            = "deploy.yml"
   log_group             = local.log_group
+  environment_variables = var.environment_variables
 }
 
 resource "aws_iam_role" "codebuild" {
@@ -155,14 +151,7 @@ data "aws_iam_policy_document" "codebuild" {
   statement {
     effect = "Allow"
     actions = [
-      "apigateway:*",
-      "ec2:*",
-      "ecs:*",
-      "logs:*",
-      "iam:*",
-      "elasticloadbalancing:*",
-      "cloudfront:*",
-      "application-autoscaling:*"
+      "*"
     ]
 
     resources = [
@@ -170,7 +159,7 @@ data "aws_iam_policy_document" "codebuild" {
     ]
   }
 }
-
+/*
 resource "aws_codebuild_report_group" "sast" {
   name           = "sast-report-${var.pipeline_name}"
   type           = "TEST"
@@ -188,4 +177,5 @@ resource "aws_codebuild_report_group" "sast" {
     }
   }
 }
+*/
 

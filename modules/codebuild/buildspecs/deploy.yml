@@ -1,20 +1,28 @@
 version: 0.2
 
 phases:
-
   install:
+    runtime-versions:
+      python: 3.9  # Ajusta la versión si usas otra
     commands:
-      - cd /usr/bin
-      - yum install -y yum-utils
-      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-      - yum install -y terraform-${TF_VERSION}
+      - echo "Instalando AWS CDK..."
+      - npm install -g aws-cdk  # Instalación global de CDK (necesario aunque sea Python)
+      - echo "Instalando dependencias del proyecto en Python..."
+      - pip install --upgrade pip
+      - pip install -r requirements.txt  # Instala las dependencias de tu proyecto CDK
 
   build:
     commands:
-      - cd "$CODEBUILD_SRC_DIR"
-      - terraform init -lock=false -input=false
-      - terraform apply -auto-approve
+      - echo "Validando la aplicación CDK..."
+      - cdk synth  # Sintetiza el template de CloudFormation para asegurar que no hay errores
 
   post_build:
     commands:
-      - echo "apply complete"
+      - echo "Desplegando la infraestructura con AWS CDK..."
+      - cdk deploy --require-approval never  # Despliega sin requerir confirmación manual
+      - echo "Despliegue completado con éxito."
+
+artifacts:
+  files:
+    - '**/*'
+
