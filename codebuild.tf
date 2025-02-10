@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 
-module "validation" {
+module "deploy" {
   source                = "./modules/codebuild"
-  codebuild_name        = lower("${var.pipeline_name}-validation")
+  codebuild_name        = lower("${var.pipeline_name}-deploy")
   codebuild_role        = aws_iam_role.codebuild.arn
   environment_variables = merge(
     var.environment_variables,
@@ -13,26 +13,6 @@ module "validation" {
   build_timeout         = 5
   build_spec            = "validate.yml"
   log_group             = local.log_group
-}
-
-module "plan" {
-  source         = "./modules/codebuild"
-  codebuild_name = lower("${var.pipeline_name}-plan")
-  codebuild_role = aws_iam_role.codebuild.arn
-  environment_variables = var.environment_variables
-  build_timeout = var.codebuild_timeout
-  build_spec    = "plan.yml"
-  log_group     = local.log_group
-}
-
-module "apply" {
-  source         = "./modules/codebuild"
-  codebuild_name = lower("${var.pipeline_name}-apply")
-  codebuild_role = aws_iam_role.codebuild.arn
-  environment_variables = var.environment_variables
-  build_timeout = var.codebuild_timeout
-  build_spec    = "apply.yml"
-  log_group     = local.log_group
 }
 
 resource "aws_iam_role" "codebuild" {

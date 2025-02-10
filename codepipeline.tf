@@ -33,10 +33,10 @@ resource "aws_codepipeline" "this" {
   }
 
   stage {
-    name = "Validate"
+    name = "Deploy"
 
     action {
-        name            = "validate"
+        name            = "Deploy"
         category        = "Build"
         owner           = "AWS"
         provider        = "CodeBuild"
@@ -44,28 +44,11 @@ resource "aws_codepipeline" "this" {
         version         = "1"
 
         configuration = {
-          ProjectName = module.validation.codebuild_project.name
+          ProjectName = module.deploy.codebuild_project.name
         }
       }
     }
-
-  stage {
-    name = "Plan"
-
-    action {
-        name            = "plan"
-        category        = "Build"
-        owner           = "AWS"
-        provider        = "CodeBuild"
-        input_artifacts = ["source_output"]
-        version         = "1"
-
-        configuration = {
-          ProjectName = module.plan.codebuild_project.name
-        }
-      }
-    }
-
+/*
   stage {
     name = "Approval"
 
@@ -81,23 +64,7 @@ resource "aws_codepipeline" "this" {
       }
     }
   }
-
-  stage {
-    name = "Apply"
-
-    action {
-        name            = "apply"
-        category        = "Build"
-        owner           = "AWS"
-        provider        = "CodeBuild"
-        input_artifacts = ["source_output"]
-        version         = "1"
-
-        configuration = {
-          ProjectName = module.apply.codebuild_project.name
-        }
-      }
-    }
+*/
   }
 
 resource "aws_iam_role" "codepipeline" {
