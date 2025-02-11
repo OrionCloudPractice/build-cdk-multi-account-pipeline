@@ -18,8 +18,8 @@ variable "environment_variables" {
   description = "environment variables for codebuild"
   type        = map(string)
   default = {
-    TF_VERSION     = "1.5.7"
-    TFLINT_VERSION = "0.48.0"
+    CDK_DEFAULT_ACCOUNT  = "536697236057"
+    CDK_DEFAULT_REGION   = "us-east-1"
   }
 }
 
