@@ -19,7 +19,7 @@ phases:
   post_build:
     commands:
       - echo "Desplegando la infraestructura con AWS CDK..."
-      - cdk deploy --app "python ./cet/app.py" --require-approval never
+      - cdk deploy AgentsStack --require-approval never
       - echo "Despliegue completado con éxito."
 
 artifacts:
